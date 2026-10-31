@@ -28,7 +28,7 @@ function Toaster() {
 }
 
 export function AppShell() {
-  const { sidebarPinned, setSidebarPinned } = useStore()
+  const { sidebarCollapsed, setSidebarCollapsed } = useStore()
   const [palette, setPalette] = React.useState(false)
   const mainRef = React.useRef<HTMLElement>(null)
   const { pathname } = useLocation()
@@ -44,12 +44,12 @@ export function AppShell() {
       }
       if (k === 'b') {
         e.preventDefault()
-        setSidebarPinned(!sidebarPinned)
+        setSidebarCollapsed(!sidebarCollapsed)
       }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [sidebarPinned, setSidebarPinned])
+  }, [sidebarCollapsed, setSidebarCollapsed])
 
   // Scroll to top when moving to a different page or record, not between tabs of one record.
   React.useEffect(() => {

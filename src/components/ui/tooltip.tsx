@@ -8,13 +8,17 @@ export function Tooltip({
   content,
   children,
   side = 'top',
+  open,
+  onOpenChange,
 }: {
   content: React.ReactNode
   children: React.ReactElement
   side?: 'top' | 'bottom' | 'left' | 'right'
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
 }) {
   return (
-    <T.Root>
+    <T.Root open={open} onOpenChange={onOpenChange}>
       <T.Trigger asChild>{children}</T.Trigger>
       <T.Portal>
         <T.Content

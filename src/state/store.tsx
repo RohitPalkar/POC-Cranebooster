@@ -13,8 +13,8 @@ export type Toast = { id: number; message: string; tone: 'success' | 'info' | 'd
 type Store = {
   navMode: 'before' | 'after'
   setNavMode: (m: 'before' | 'after') => void
-  sidebarPinned: boolean
-  setSidebarPinned: (v: boolean) => void
+  sidebarCollapsed: boolean
+  setSidebarCollapsed: (v: boolean) => void
   pins: PinItem[]
   setPins: (p: PinItem[]) => void
   togglePin: (p: PinItem) => void
@@ -54,6 +54,16 @@ type Store = {
 const StoreContext: React.Context<Store | null> = import.meta.hot?.data.storeContext ?? React.createContext<Store | null>(null)
 if (import.meta.hot) import.meta.hot.data.storeContext = StoreContext
 
+const SIDEBAR_STORAGE_KEY = 'cb.sidebar-collapsed'
+
+function readSidebarCollapsed() {
+  try {
+    return window.localStorage.getItem(SIDEBAR_STORAGE_KEY) === 'true'
+  } catch {
+    return false
+  }
+}
+
 const defaultPins: PinItem[] = [
   { path: '/operations/todays-jobs', label: "Today's jobs" },
   { path: '/crm/enquiries', label: 'Enquiries' },
@@ -69,7 +79,16 @@ const defaultRecents: RecentItem[] = [
 
 export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [navMode, setNavMode] = React.useState<'before' | 'after'>('after')
-  const [sidebarPinned, setSidebarPinned] = React.useState(true)
+  const [sidebarCollapsed, setSidebarCollapsed] = React.useState(readSidebarCollapsed)
+
+  React.useEffect(() => {
+    try {
+      window.localStorage.setItem(SIDEBAR_STORAGE_KEY, String(sidebarCollapsed))
+    } catch {
+      // Storage can be unavailable in private browsing or sandboxed frames.
+    }
+  }, [sidebarCollapsed])
+
   const [pins, setPins] = React.useState(defaultPins)
   const [recents, setRecents] = React.useState(defaultRecents)
   const [enqStage, setEnqStage] = React.useState<EnquiryStage>('negotiation')
@@ -98,8 +117,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const value: Store = {
     navMode,
     setNavMode,
-    sidebarPinned,
-    setSidebarPinned,
+    sidebarCollapsed,
+    setSidebarCollapsed,
     pins,
     setPins,
     togglePin: (p) => {
