@@ -1,0 +1,11 @@
+{
+  "title": "Crane Booster CSP ERP",
+  "description": "Clickable prototype of the Crane Booster CSP ERP navigation and record workspaces.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
